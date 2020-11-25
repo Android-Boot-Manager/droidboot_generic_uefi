@@ -39,9 +39,9 @@
   UefiApplicationEntryPoint
   UefiBootServicesTableLib
   UefiLib
-   MemoryAllocationLib
-   BaseMemoryLib
-   BaseLib
+  MemoryAllocationLib
+  BaseMemoryLib
+  BaseLib
   DevicePathLib
   DebugLib
   DxeServicesLib
@@ -50,6 +50,7 @@
   MemoryAllocationLib
   IoLib
   PerformanceLib
+  LVGLLib
 
 [LibraryClasses.AARCH64]
   BaseStackCheckLib

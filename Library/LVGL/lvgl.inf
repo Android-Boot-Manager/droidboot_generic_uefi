@@ -18,10 +18,10 @@
   DebugLib
   TimerLib
   CacheMaintenanceLib
-  ArmLib
 
 [Sources.common]
   lvgl.h
+  lv_conf.h
   lv_api_map.h
   lv_conf_internal.h
   lv_conf_kconfig.h 

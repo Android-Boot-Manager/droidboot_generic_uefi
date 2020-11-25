@@ -4,5 +4,5 @@
   PACKAGE_GUID                   = aba6ea83-69e9-4345-b074-01f3626b389f
   PACKAGE_VERSION                = 0.0.1
 
-[Includes]
-  StdLib/Include
+#[Includes]
+#  StdLib/Include

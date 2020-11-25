@@ -72,6 +72,9 @@
   HobLib|MdePkg/Library/DxeHobLib/DxeHobLib.inf
   BaseStackCheckLib|MdePkg/Library/BaseStackCheckLib/BaseStackCheckLib.inf
 
+  #lvgl
+  LVGLLib|AbmPkg/Library/LVGL/lvgl.inf
+
 [LibraryClasses.AARCH64]
   CompilerIntrinsicsLib|ArmPkg/Library/CompilerIntrinsicsLib/CompilerIntrinsicsLib.inf
 
