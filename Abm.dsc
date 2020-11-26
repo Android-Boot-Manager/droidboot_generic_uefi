@@ -75,12 +75,16 @@
   #lvgl
   LVGLLib|AbmPkg/Library/LVGL/lvgl.inf
 
+  
+  StrLib|AbmPkg/Library/StrLib/StrLib.inf
+  MallocLib|AbmPkg/Library/MallocLib/MallocLib.inf
+  MicroLibC|AbmPkg/Library/MicroLibC/MicroLibC.inf
+
 [LibraryClasses.AARCH64]
   CompilerIntrinsicsLib|ArmPkg/Library/CompilerIntrinsicsLib/CompilerIntrinsicsLib.inf
 
 [Components]
   AbmPkg/abm.inf
-  AbmPkg/gptsync.inf
   AbmPkg/filesystems/ext2.inf
   AbmPkg/filesystems/ext4.inf
   AbmPkg/filesystems/btrfs.inf

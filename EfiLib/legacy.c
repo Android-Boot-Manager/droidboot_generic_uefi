@@ -23,12 +23,12 @@
 #define EfiReallocatePool ReallocatePool
 #define EfiLibLocateProtocol LibLocateProtocol
 #else
-#include "../include/tiano_includes.h"
+#include "tiano_includes.h"
 #endif
 #include "legacy.h"
 #include "GenericBdsLib.h"
 #include "../refind/global.h"
-#include "../include/refit_call_wrapper.h"
+#include "refit_call_wrapper.h"
 
 BOOT_OPTION_BBS_MAPPING  *mBootOptionBbsMapping     = NULL;
 UINTN                    mBootOptionBbsMappingCount = 0;

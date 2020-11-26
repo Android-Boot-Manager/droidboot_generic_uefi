@@ -55,8 +55,8 @@
 #define gMyEfiSimpleFileSystemProtocolGuid gEfiSimpleFileSystemProtocolGuid
 #endif
 
-#include "../include/refit_call_wrapper.h"
-#include "../include/version.h"
+#include "../Include/refit_call_wrapper.h"
+#include "../Include/version.h"
 
 #define DEBUG_LEVEL 0
 

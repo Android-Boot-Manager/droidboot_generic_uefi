@@ -30,7 +30,7 @@ extern EFI_GUID gMyEfiBlockIoProtocolGuid;
 #define gMyEfiBlockIoProtocolGuid gEfiBlockIoProtocolGuid
 #define gMyEfiDiskIoProtocolGuid gEfiDiskIoProtocolGuid
 #endif
-#include "../include/refit_call_wrapper.h"
+#include "../Include/refit_call_wrapper.h"
 
 extern struct fsw_host_table   fsw_efi_host_table;
 static void dummy_volume_free(struct fsw_volume *vol) { }

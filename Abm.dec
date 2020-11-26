@@ -6,3 +6,5 @@
 
 #[Includes]
 #  StdLib/Include
+[Includes.common]
+  Include

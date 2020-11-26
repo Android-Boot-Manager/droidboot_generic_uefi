@@ -30,6 +30,10 @@
     #include "../lv_gpu/lv_gpu_nxp_pxp_osa.h"
 #endif
 
+#ifndef memcmp 
+    #define memcmp(s1, s2, n) ((int)CompareMem((s1), (s2), (n)))
+#endif
+
 #if defined(LV_GC_INCLUDE)
     #include LV_GC_INCLUDE
 #endif /* LV_ENABLE_GC */

@@ -18,6 +18,7 @@
   DebugLib
   TimerLib
   CacheMaintenanceLib
+  MicroLibC
 
 [Sources.common]
   lvgl.h

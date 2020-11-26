@@ -17,7 +17,7 @@ WITHOUT WARRANTIES OR REPRESENTATIONS OF ANY KIND, EITHER EXPRESS OR IMPLIED.
 **/
 
 #ifdef __MAKEWITH_TIANO
-#include "../include/tiano_includes.h"
+#include "tiano_includes.h"
 #else
 #include "gnuefi-helper.h"
 #include "GenericBdsLib.h"

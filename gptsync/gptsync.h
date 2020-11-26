@@ -56,7 +56,7 @@
 #include "efi.h"
 #include "efilib.h"
 #else
-#include "../include/tiano_includes.h"
+#include "../Include/tiano_includes.h"
 #endif
 
 #define copy_guid(destguid, srcguid) (CopyMem(destguid, srcguid, 16))

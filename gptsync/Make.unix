@@ -55,7 +55,7 @@ lib.unix.o: lib.c
 
 # additional dependencies
 
-gptsync.unix.o: gptsync.h ../include/syslinux_mbr.h
+gptsync.unix.o: gptsync.h syslinux_mbr.h
 os_unix.gptsync.o: gptsync.h
 
 showpart.unix.o: gptsync.h
