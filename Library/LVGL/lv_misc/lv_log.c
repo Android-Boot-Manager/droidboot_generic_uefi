@@ -85,7 +85,7 @@ void _lv_log_add(lv_log_level_t level, const char * file, int line, const char *
         }
 
         static const char * lvl_prefix[] = {"Trace", "Info", "Warn", "Error", "User"};
-        printf("%s: %s \t(%s #%d %s())\n", lvl_prefix[level], buf, &file[p], line, func);
+        //Print("%s: %s \t(%s #%d %s())\n", lvl_prefix[level], buf, &file[p], line, func);
 #else
         if(custom_print_cb) custom_print_cb(level, file, line, func, buf);
 #endif
