@@ -36,6 +36,6 @@ static inline char *strncat(char *dest, const char *src, size_t n)
 //
 // UNSAFE
 //
-#define strcpy(dest, src) AsciiStrCpyS((dest), AsciiStrLen((src)), (src))
+
 
 #endif

@@ -18,7 +18,6 @@
  *********************/
 #define LV_OBJX_NAME "lv_win"
 #define DEF_TITLE "Window"
-#define strcpy(dest, src) AsciiStrCpyS((dest), AsciiStrLen((src)), (src))
 
 /**********************
  *      TYPEDEFS
@@ -92,8 +91,8 @@ lv_obj_t * lv_win_create(lv_obj_t * par, const lv_obj_t * copy)
 
     ext->page          = NULL;
     ext->header        = NULL;
-    ext->title_txt    = lv_mem_alloc(15 + 1);
-    ext->title_txt    = "hi this is test";
+    ext->title_txt    = lv_mem_alloc(strlen(DEF_TITLE) + 1);
+    strcpy(ext->title_txt, DEF_TITLE);
 
     /*Init the new window object*/
     if(copy == NULL) {
@@ -138,8 +137,8 @@ lv_obj_t * lv_win_create(lv_obj_t * par, const lv_obj_t * copy)
         lv_win_ext_t * copy_ext = lv_obj_get_ext_attr(copy);
         /*Create the objects*/
         ext->header   = lv_obj_create(new_win, copy_ext->header);
-        ext->title_txt    = lv_mem_alloc(15 + 1);
-        ext->title_txt    ="hi this is test";
+        ext->title_txt    = lv_mem_alloc(strlen(copy_ext->title_txt) + 1);
+        strcpy(ext->title_txt, copy_ext->title_txt);
         ext->page     = lv_page_create(new_win, copy_ext->page);
         ext->btn_w     = copy_ext->btn_w;
 
@@ -258,11 +257,11 @@ void lv_win_set_title(lv_obj_t * win, const char * title)
 
     lv_win_ext_t * ext = lv_obj_get_ext_attr(win);
 
-    ext->title_txt    = lv_mem_realloc(ext->title_txt, 15 + 1);
+    ext->title_txt    = lv_mem_realloc(ext->title_txt, strlen(title) + 1);
     LV_ASSERT_MEM(ext->title_txt);
     if(ext->title_txt == NULL) return;
 
-    ext->title_txt="hi this is test";
+    strcpy(ext->title_txt, title);
     lv_obj_invalidate(ext->header);
 }
 

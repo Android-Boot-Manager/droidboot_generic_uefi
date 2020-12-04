@@ -36,9 +36,6 @@ efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
   gBS1->LocateProtocol(
       &gEfiGraphicsOutputProtocolGuid, NULL, (VOID **)&mGop);
 Print(L"commom init\n");
-mGop->Blt(
-      mGop, (EFI_GRAPHICS_OUTPUT_BLT_PIXEL *)0, EfiBltBufferToVideo, 0, 0,
-      0, 0, 1920, 1080, 0);
     // Prepare LittleVGL
   lv_init();   
   static lv_disp_buf_t disp_buf;
@@ -50,17 +47,16 @@ mGop->Blt(
   disp_drv.buffer = & disp_buf; /*Assign the buffer to the display*/
   lv_disp_drv_register( & disp_drv); /*Finally register the driver*/
 
-Print(L"lv init");
    lv_obj_t * win = lv_win_create(lv_scr_act(), NULL);
-    lv_win_set_title(win, "242"); 
+    lv_win_set_title(win, "Boot Menu"); 
     lv_obj_t * list1 = lv_list_create(win, NULL);
 lv_obj_set_size(list1, 1000, 1000);
 
    lv_obj_t * list_btn;
     lv_obj_set_state(list1, LV_STATE_DEFAULT);
- list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "2");
- list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "1");
- list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "(");
+ list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Example 1");
+ list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Example 2");
+ list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Extras");
 Print(L"commom loop");
 
 while (TRUE) {
