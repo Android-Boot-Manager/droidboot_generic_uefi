@@ -16,7 +16,6 @@ lv_disp_t * disp;
 static void EfiGopBltFlush(
     lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p)
 {
-  Print(L"hi5\n");  
   mGop->Blt(
       mGop, (EFI_GRAPHICS_OUTPUT_BLT_PIXEL *)color_p, EfiBltBufferToVideo, 0, 0,
       area->x1, area->y1, area->x2 - area->x1 + 1, area->y2 - area->y1 + 1, 0);
@@ -24,27 +23,6 @@ static void EfiGopBltFlush(
   lv_disp_flush_ready(disp_drv);
 }
 
-void my_log_cb(lv_log_level_t level, const char * file, int line, const char * fn_name, const char * dsc)
-{
-  /*Send the logs via serial port*/
-  if(level == LV_LOG_LEVEL_ERROR) Print(L"ERROR: ");
-  if(level == LV_LOG_LEVEL_WARN)  Print(L"WARNING: ");
-  if(level == LV_LOG_LEVEL_INFO)  Print(L"INFO: ");
-  if(level == LV_LOG_LEVEL_TRACE) Print(L"TRACE: ");
-
-  Print(L"File: ");
-  Print(file);
-
-  char line_str[8];
-  Print(L"#");
-  Print(line_str);
-
-  Print(L": ");
-  Print(fn_name);
-  Print(L": ");
-  Print(dsc);
-  Print(L"\n");
-}
 
 //
 // main entry point
@@ -57,10 +35,10 @@ efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
   gBS1 = gST1->BootServices; 
   gBS1->LocateProtocol(
       &gEfiGraphicsOutputProtocolGuid, NULL, (VOID **)&mGop);
-   mGop->Blt(
-      mGop, (EFI_GRAPHICS_OUTPUT_BLT_PIXEL *)456, EfiBltBufferToVideo, 0, 0,
-      0, 0, 100 + 1, 100 + 1, 0);
-  
+Print(L"commom init\n");
+mGop->Blt(
+      mGop, (EFI_GRAPHICS_OUTPUT_BLT_PIXEL *)0, EfiBltBufferToVideo, 0, 0,
+      0, 0, 1920, 1080, 0);
     // Prepare LittleVGL
   lv_init();   
   static lv_disp_buf_t disp_buf;
@@ -72,7 +50,19 @@ efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
   disp_drv.buffer = & disp_buf; /*Assign the buffer to the display*/
   lv_disp_drv_register( & disp_drv); /*Finally register the driver*/
 
-  Print(L"hi4\n");  
+Print(L"lv init");
+   lv_obj_t * win = lv_win_create(lv_scr_act(), NULL);
+    lv_win_set_title(win, "242"); 
+    lv_obj_t * list1 = lv_list_create(win, NULL);
+lv_obj_set_size(list1, 1000, 1000);
+
+   lv_obj_t * list_btn;
+    lv_obj_set_state(list1, LV_STATE_DEFAULT);
+ list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "2");
+ list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "1");
+ list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "(");
+Print(L"commom loop");
+
 while (TRUE) {
     lv_tick_inc(1);
     lv_task_handler();
