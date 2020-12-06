@@ -24,6 +24,36 @@ static void EfiGopBltFlush(
 }
 
 
+//Read keys state
+bool key_read(lv_indev_drv_t * drv, lv_indev_data_t*data)
+{
+  EFI_INPUT_KEY  Key;
+
+  //Read keys
+  gST1->ConIn->ReadKeyStroke (gST1->ConIn, &Key);
+
+  //Vol up
+  data->key = LV_KEY_UP;
+  if (Key.ScanCode==SCAN_UP){
+      data->state = LV_INDEV_STATE_PR;
+      return false;
+  } 
+
+  //Vol down 
+  data->key = LV_KEY_DOWN;
+  if (Key.ScanCode==SCAN_DOWN){
+      data->state = LV_INDEV_STATE_PR;
+      return false;
+  } 
+
+  //Pwr key
+  data->key = LV_KEY_ENTER;
+  if (Key.ScanCode==SCAN_SUSPEND){
+      data->state = LV_INDEV_STATE_PR;
+      return false;
+  } 
+}
+
 //
 // main entry point
 //
@@ -35,8 +65,9 @@ efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
   gBS1 = gST1->BootServices; 
   gBS1->LocateProtocol(
       &gEfiGraphicsOutputProtocolGuid, NULL, (VOID **)&mGop);
-Print(L"commom init\n");
-    // Prepare LittleVGL
+
+
+  // Prepare LittleVGL
   lv_init();   
   static lv_disp_buf_t disp_buf;
   static lv_color_t buf[LV_HOR_RES_MAX * 10]; /*Declare a buffer for 10 lines*/
@@ -47,21 +78,34 @@ Print(L"commom init\n");
   disp_drv.buffer = & disp_buf; /*Assign the buffer to the display*/
   lv_disp_drv_register( & disp_drv); /*Finally register the driver*/
 
-   lv_obj_t * win = lv_win_create(lv_scr_act(), NULL);
-    lv_win_set_title(win, "Boot Menu"); 
-    lv_obj_t * list1 = lv_list_create(win, NULL);
-lv_obj_set_size(list1, 1000, 1000);
+  lv_obj_t * win = lv_win_create(lv_scr_act(), NULL);
+  lv_win_set_title(win, "Boot Menu"); 
+  lv_obj_t * list1 = lv_list_create(win, NULL);
+  lv_obj_set_size(list1, 1000, 1050);
 
-   lv_obj_t * list_btn;
-    lv_obj_set_state(list1, LV_STATE_DEFAULT);
- list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Example 1");
- list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Example 2");
- list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Extras");
-Print(L"commom loop");
+  lv_group_t * g1 = lv_group_create();
+  lv_group_add_obj(g1, list1);
+  lv_group_focus_obj(list1);
 
-while (TRUE) {
+
+  lv_indev_drv_t indev_drv;
+  lv_indev_drv_init(&indev_drv);      /*Basic initialization*/
+  indev_drv.type = LV_INDEV_TYPE_KEYPAD;
+  indev_drv.read_cb = key_read;
+  /*Register the driver in LVGL and save the created input device object*/
+  lv_indev_t * my_indev = lv_indev_drv_register(&indev_drv);
+  lv_indev_set_group(my_indev, g1);
+
+  lv_obj_t * list_btn;
+  lv_obj_set_state(list1, LV_STATE_DEFAULT);
+  list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Example 1");
+  list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Example 2");
+  list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Extras");
+  lv_list_set_anim_time(list1, 500);
+
+  while (TRUE) {
     lv_tick_inc(1);
     lv_task_handler();
     gBS1->Stall(EFI_TIMER_PERIOD_MILLISECONDS(1));
-}
+  }
 } 
