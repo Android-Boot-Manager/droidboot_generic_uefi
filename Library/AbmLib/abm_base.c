@@ -12,7 +12,13 @@ EFI_GRAPHICS_OUTPUT_PROTOCOL *mGop;
 lv_disp_drv_t                 mDispDrv;
 lv_indev_drv_t                mFakeInputDrv;
 lv_disp_t * disp;
-
+bool abm_running=true;
+static void event_handler(lv_obj_t * obj, lv_event_t event)
+{
+    if(event == LV_EVENT_CLICKED) {
+        abm_running=false;
+    }
+}
 static void EfiGopBltFlush(
     lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p)
 {
@@ -59,7 +65,7 @@ bool key_read(lv_indev_drv_t * drv, lv_indev_data_t*data)
 //
 EFI_STATUS
 EFIAPI
-efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
+test_lvgl (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 {
   gST1 = SystemTable; 
   gBS1 = gST1->BootServices; 
@@ -99,11 +105,13 @@ efi_main (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
   lv_obj_t * list_btn;
   lv_obj_set_state(list1, LV_STATE_DEFAULT);
   list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Example 1");
+  lv_obj_set_event_cb(list_btn, event_handler);
   list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Example 2");
+  lv_obj_set_event_cb(list_btn, event_handler);
   list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Extras");
   lv_list_set_anim_time(list1, 500);
 
-  while (TRUE) {
+  while (abm_running) {
     lv_tick_inc(1);
     lv_task_handler();
     gBS1->Stall(EFI_TIMER_PERIOD_MILLISECONDS(1));

@@ -22,7 +22,7 @@
 #
 
 [Sources]
-  abm/main.c
+  abm/abm.c
 
 [Packages]
   MdePkg/MdePkg.dec

@@ -1,0 +1,37 @@
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = AbmLib
+  FILE_GUID                      = 5e600feb-6d54-4f87-8199-8d614576bf22
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = ABM
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  MdePkg/MdePkg.dec
+  AbmPkg/Abm.dec
+
+[LibraryClasses]
+  BaseLib
+  IoLib
+  PrintLib
+  DebugLib
+  TimerLib
+  CacheMaintenanceLib
+  MicroLibC
+  LittleVglLib 
+  DxeServicesTableLib
+  UefiLib
+  UefiApplicationEntryPoint
+  Zlib
+  ArmLib
+  HobLib
+  PerformanceLib
+  DebugPrintErrorLevelLib
+  TimerLib
+  BootLib
+  EfiFileLib
+  
+[Sources.common]
+  abm_base.h
+  abm_base.c
