@@ -81,6 +81,8 @@
   MicroLibC|AbmPkg/Library/MicroLibC/MicroLibC.inf
   
   AbmLib|AbmPkg/Library/AbmLib/AbmLib.inf
+  
+  lwext4Lib|AbmPkg/Library/lwext4Lib/lwext4Lib.inf
 
 [LibraryClasses.AARCH64]
   CompilerIntrinsicsLib|ArmPkg/Library/CompilerIntrinsicsLib/CompilerIntrinsicsLib.inf

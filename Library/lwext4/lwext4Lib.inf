@@ -1,0 +1,46 @@
+[Defines]
+  INF_VERSION                    = 0x00010005
+  BASE_NAME                      = lwext4Lib
+  FILE_GUID                      = fe526182-36e0-4a0e-8d6a-79ca9a0247c0
+  MODULE_TYPE                    = BASE
+  VERSION_STRING                 = 1.0
+  LIBRARY_CLASS                  = lwext4
+
+[Packages]
+  ArmPkg/ArmPkg.dec
+  MdePkg/MdePkg.dec
+  AbmPkg/Abm.dec
+
+[LibraryClasses]
+  BaseLib
+  IoLib
+  PrintLib
+  DebugLib
+  TimerLib
+  CacheMaintenanceLib
+  MicroLibC
+
+[Sources.common]
+  src/ext4_journal.c
+  src/ext4_trans.c
+  src/ext4.c
+  src/ext4_balloc.c
+  src/ext4_super.c
+  src/ext4_fs.c
+  src/ext4_extent.c
+  src/ext4_dir.c
+  src/ext4_xattr.c
+  src/ext4_blockdev.c
+  src/ext4_mkfs.c
+  src/ext4_debug.c
+  src/ext4_bcache.c
+  src/ext4_dir_idx.c
+  src/ext4_inode.c
+  src/ext4_crc32.c
+  src/ext4_mbr.c
+  src/ext4_ialloc.c
+  src/ext4_hash.c
+  src/ext4_bitmap.c
+  src/ext4_block_group.c
+
+

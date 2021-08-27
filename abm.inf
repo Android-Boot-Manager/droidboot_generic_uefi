@@ -51,6 +51,7 @@
   IoLib
   PerformanceLib
   LVGLLib
+  lwext4Lib
 
 [LibraryClasses.AARCH64]
   BaseStackCheckLib
