@@ -153,7 +153,6 @@ uint32_t ext4_dmask_get(void);
 				printf("l: %d   ", __LINE__);                  \
 			}                                                      \
 			printf(__VA_ARGS__);                                   \
-			fflush(stdout);                                        \
 		}                                                              \
 	} while (0)
 #else
@@ -165,20 +164,12 @@ uint32_t ext4_dmask_get(void);
 #if CONFIG_HAVE_OWN_ASSERT
 #include <stdio.h>
 
-#define ext4_assert(_v)                                                        \
-	do {                                                                   \
-		if (!(_v)) {                                                   \
-			printf("assertion failed:\nfile: %s\nline: %d\n",      \
-			       __FILE__, __LINE__);                            \
-			       while (1)				       \
-				       ;				       \
-		}                                                              \
-	} while (0)
+#define ext4_assert(_v)                                                        
 #else
-#define ext4_assert(_v) assert(_v)
+#define ext4_assert(_v) 
 #endif
 #else
-#define ext4_assert(_v) ((void)(_v))
+#define ext4_assert(_v) 
 #endif
 
 #ifdef __cplusplus

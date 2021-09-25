@@ -5,7 +5,17 @@
 #include <../Include/lvgl.h>
 #include <../Include/lv_misc/lv_log.h>
 #include <string.h>
+#include <ext4.h>
+#include "abm_fs.h"
+#include <ext4_mkfs.h>
 
+static struct ext4_mkfs_info info = {
+	.block_size = 4096,
+	.journal = false,
+};
+static int fs_type = F_SET_EXT2;
+static struct ext4_fs fs;
+static struct ext4_blockdev *bd;
 EFI_SYSTEM_TABLE                    *gST1;
 EFI_BOOT_SERVICES             *gBS1;
 EFI_GRAPHICS_OUTPUT_PROTOCOL *mGop;
@@ -67,12 +77,16 @@ EFI_STATUS
 EFIAPI
 efi_main_init (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 {
+#error
   gST1 = SystemTable; 
   gBS1 = gST1->BootServices; 
   gBS1->LocateProtocol(
       &gEfiGraphicsOutputProtocolGuid, NULL, (VOID **)&mGop);
 
-
+  // Format cache test
+  bd = uefi_dev_get();
+  ext4_mkfs(&fs, bd, &info, fs_type);
+  
   // Prepare LittleVGL
   lv_init();   
   static lv_disp_buf_t disp_buf;

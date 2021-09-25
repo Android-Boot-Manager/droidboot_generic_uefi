@@ -101,12 +101,12 @@ extern "C" {
 
 /**@brief   Debug printf enable (stdout)*/
 #ifndef CONFIG_DEBUG_PRINTF
-#define CONFIG_DEBUG_PRINTF 1
+#define CONFIG_DEBUG_PRINTF 0
 #endif
 
 /**@brief   Assert printf enable (stdout)*/
 #ifndef CONFIG_DEBUG_ASSERT
-#define CONFIG_DEBUG_ASSERT 1
+#define CONFIG_DEBUG_ASSERT 0
 #endif
 
 /**@brief   Include assert codes from ext4_debug or standard library.*/

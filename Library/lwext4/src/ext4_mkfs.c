@@ -776,7 +776,7 @@ int ext4_mkfs(struct ext4_fs *fs, struct ext4_blockdev *bd,
 	}
 
 	info->bg_desc_reserve_blocks = 0;
-
+//breakpoint ok
 	ext4_dbg(DEBUG_MKFS, DBG_INFO "Creating filesystem with parameters:\n");
 	ext4_dbg(DEBUG_MKFS, DBG_NONE "Size: %"PRIu64"\n", info->len);
 	ext4_dbg(DEBUG_MKFS, DBG_NONE "Block size: %"PRIu32"\n",
@@ -805,15 +805,17 @@ int ext4_mkfs(struct ext4_fs *fs, struct ext4_blockdev *bd,
 	ext4_dbg(DEBUG_MKFS, DBG_NONE "Label: %s\n", info->label);
 
 	struct ext4_bcache bc;
-
+// breakpoint ok
 	memset(&bc, 0, sizeof(struct ext4_bcache));
+// breakpoint ok
 	ext4_block_set_lb_size(bd, info->block_size);
-
+	
+//breakpoint bad
 	r = ext4_bcache_init_dynamic(&bc, CONFIG_BLOCK_DEV_CACHE_SIZE,
 				      info->block_size);
 	if (r != EOK)
 		goto block_fini;
-
+//breakpoint bad
 	/*Bind block cache to block device*/
 	r = ext4_block_bind_bcache(bd, &bc);
 	if (r != EOK)

@@ -1,11 +1,20 @@
 #include <Uefi.h>
 #include <Protocol/GraphicsOutput.h>
 #include <Library/UefiLib.h>
+#include <Library/BaseLib.h>
+#include <Library/BaseMemoryLib.h>
+#include <Library/DebugLib.h>
+#include <Library/MemoryAllocationLib.h>
+#include <Library/PcdLib.h>
+#include <Library/UefiApplicationEntryPoint.h>
+#include <Library/UefiBootServicesTableLib.h>
+#include <Library/UefiRuntimeServicesTableLib.h>
+
 //TODO: fix this include
 #include <../Include/lvgl.h>
 #include <../Include/lv_misc/lv_log.h>
 #include <string.h>
-
+#include <Protocol/BlockIo.h>
 EFI_SYSTEM_TABLE                    *gST1;
 EFI_BOOT_SERVICES             *gBS1;
 EFI_GRAPHICS_OUTPUT_PROTOCOL *mGop;
@@ -13,6 +22,21 @@ lv_disp_drv_t                 mDispDrv;
 lv_indev_drv_t                mFakeInputDrv;
 lv_disp_t * disp;
 bool abm_running=true;
+#include <ext4.h>
+#include "abm_fs.h"
+#include <ext4_mkfs.h>
+#include "config.h"
+
+struct boot_entry *entry_list;
+
+static struct ext4_mkfs_info info = {
+	.block_size = 4096,
+	.journal = false,
+};
+static int fs_type = F_SET_EXT2;
+static struct ext4_fs fs;
+static struct ext4_blockdev *bd;
+
 static void event_handler(lv_obj_t * obj, lv_event_t event)
 {
     if(event == LV_EVENT_CLICKED) {
@@ -65,13 +89,22 @@ bool key_read(lv_indev_drv_t * drv, lv_indev_data_t*data)
 //
 EFI_STATUS
 EFIAPI
-test_lvgl (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
+test_lvgl (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable, EFI_BLOCK_IO_PROTOCOL *BlockIo)
 {
   gST1 = SystemTable; 
   gBS1 = gST1->BootServices; 
   gBS1->LocateProtocol(
       &gEfiGraphicsOutputProtocolGuid, NULL, (VOID **)&mGop);
 
+  // Setup lwext4 lib, based on UEFI BlockIo protocol
+  uefi_dev_set(BlockIo);
+  bd = uefi_dev_get();
+  if (!bd) {
+	DebugAssert("abm_base.c", 92, "open_filedev: fail\n");
+  }
+  
+  mount_meta(bd);
+  entry_list = parse_boot_entries(&entry_list);
 
   // Prepare LittleVGL
   lv_init();   
@@ -104,11 +137,11 @@ test_lvgl (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable)
 
   lv_obj_t * list_btn;
   lv_obj_set_state(list1, LV_STATE_DEFAULT);
-  list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Example 1");
-  lv_obj_set_event_cb(list_btn, event_handler);
-  list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Example 2");
-  lv_obj_set_event_cb(list_btn, event_handler);
+  for(int i=0; i<get_entry_count(); i++){
+        list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, (entry_list+i)->title);
+  }
   list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Extras");
+  lv_obj_set_event_cb(list_btn, event_handler);
   lv_list_set_anim_time(list1, 500);
 
   while (abm_running) {

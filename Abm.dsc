@@ -83,7 +83,8 @@
   AbmLib|AbmPkg/Library/AbmLib/AbmLib.inf
   
   lwext4Lib|AbmPkg/Library/lwext4Lib/lwext4Lib.inf
-
+  FastbootLib|QcomModulePkg/Library/FastbootLib/FastbootLib.inf
+  
 [LibraryClasses.AARCH64]
   CompilerIntrinsicsLib|ArmPkg/Library/CompilerIntrinsicsLib/CompilerIntrinsicsLib.inf
 

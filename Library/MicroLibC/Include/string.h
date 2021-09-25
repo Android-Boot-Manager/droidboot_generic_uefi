@@ -15,6 +15,21 @@
 #define memset(s, c, n) SetMem((s), (UINTN)(n), (UINT8)(c))
 #define memcpy(s1, s2, n) CopyMem((s1), (s2), (n))
 
+static inline char *
+strcat (char *dest, const char *src)
+{
+  char *p = dest;
+  while (*p)
+    p++;
+  while ((*p = *src) != '\0')
+    {
+      p++;
+      src++;
+    }
+
+  return dest;
+}
+
 static inline char *strncpy(char *dest, const char *src, size_t n)
 {
   RETURN_STATUS Status = AsciiStrCpyS(dest, n, src);

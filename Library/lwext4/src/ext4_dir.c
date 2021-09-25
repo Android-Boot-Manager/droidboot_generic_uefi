@@ -54,6 +54,27 @@
 
 #include <string.h>
 
+// HACK: declare memcmp here, TODO: move it to libc
+static int memcmp(const void *s1, const void *s2, UINTN n)
+{
+	const unsigned char *c1 = s1, *c2 = s2;
+	int d = 0;
+
+	if (!s1 && !s2)
+		return 0;
+	if (s1 && !s2)
+		return 1;
+	if (!s1 && s2)
+		return -1;
+
+	while (n--) {
+		d = (int)*c1++ - (int)*c2++;
+		if (d)
+			break;
+	}
+	return d;
+}
+
 /****************************************************************************/
 
 /* Walk through a dirent block to find a checksum "dirent" at the tail */

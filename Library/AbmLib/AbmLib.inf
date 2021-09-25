@@ -32,7 +32,38 @@
   BootLib
   EfiFileLib
   lwext4Lib
+  FastbootLib
+  
+[Protocols]
+  gEfiSimpleTextInProtocolGuid
+  gEfiDevicePathToTextProtocolGuid
+  gEfiSimpleTextOutProtocolGuid
+  gEfiBlockIoProtocolGuid
+  gEfiDiskIoProtocolGuid
+  gEfiPartitionRecordGuid
+  gEfiUsbDeviceProtocolGuid
+  gEfiUsbfnIoProtocolGuid
+  gEfiMemCardInfoProtocolGuid
+  gEfiEraseBlockProtocolGuid
+
+[Guids]
+  gEfiUfsLU0Guid
+  gEfiUfsLU1Guid
+  gEfiUfsLU2Guid
+  gEfiUfsLU3Guid
+  gEfiUfsLU4Guid
+  gEfiUfsLU5Guid
+  gEfiUfsLU6Guid
+  gEfiUfsLU7Guid
+  gEfiBootImgPartitionGuid
+  gEfiRecoveryImgPartitionGuid
+  gQcomTokenSpaceGuid
+  gBlockIoRefreshGuid
   
 [Sources.common]
   abm_base.h
   abm_base.c
+  abm_fs.h
+  abm_fs.c
+  config.c
+  fs_utils.c
