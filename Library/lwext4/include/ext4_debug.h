@@ -41,6 +41,18 @@
 extern "C" {
 #endif
 
+#include <Uefi.h>
+#include <Protocol/GraphicsOutput.h>
+#include <Library/UefiLib.h>
+#include <Library/BaseLib.h>
+#include <Library/BaseMemoryLib.h>
+#include <Library/DebugLib.h>
+#include <Library/MemoryAllocationLib.h>
+#include <Library/PcdLib.h>
+#include <Library/UefiApplicationEntryPoint.h>
+#include <Library/UefiBootServicesTableLib.h>
+#include <Library/UefiRuntimeServicesTableLib.h>
+
 #include <ext4_config.h>
 #include <ext4_errno.h>
 
@@ -141,23 +153,14 @@ void ext4_dmask_clr(uint32_t m);
  * @return  debug mask*/
 uint32_t ext4_dmask_get(void);
 
-#if CONFIG_DEBUG_PRINTF
-#include <stdio.h>
-
-/**@brief   Debug printf.*/
 #define ext4_dbg(m, ...)                                                       \
 	do {                                                                   \
-		if ((m) & ext4_dmask_get()) {                                  \
-			if (!((m) & DEBUG_NOPREFIX)) {                         \
-				printf("%s", ext4_dmask_id2str(m));            \
-				printf("l: %d   ", __LINE__);                  \
-			}                                                      \
-			printf(__VA_ARGS__);                                   \
+		if (m) {                                  \
+				DEBUG ((EFI_D_INFO, "%a", ext4_dmask_id2str(m)));            \
+				DEBUG ((EFI_D_INFO, "l: %d   ", __LINE__));                  \
+			DEBUG ((EFI_D_INFO, __VA_ARGS__));                                   \
 		}                                                              \
 	} while (0)
-#else
-#define ext4_dbg(m, ...) do { } while (0)
-#endif
 
 #if CONFIG_DEBUG_ASSERT
 /**@brief   Debug assertion.*/

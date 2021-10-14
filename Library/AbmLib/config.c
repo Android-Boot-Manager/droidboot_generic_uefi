@@ -126,6 +126,7 @@ int get_entry_count(void) {
 }
 
 struct boot_entry *parse_boot_entries(struct boot_entry **_entry_list) {
+DEBUG ((EFI_D_INFO, "parse boot entry: start, need to parse: %d configs\n", dir_count_entries(ENTRIES_DIR)));
 	int ret;
 
     struct boot_entry *entry_list=malloc(sizeof(struct boot_entry)*dir_count_entries(ENTRIES_DIR));    

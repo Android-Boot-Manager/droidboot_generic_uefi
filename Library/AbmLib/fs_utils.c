@@ -27,7 +27,7 @@ int dir_count_entries(const char *path) {
     // Process each entry.
     int res=0;
     de = ext4_dir_entry_next(&d);
-
+    DEBUG ((EFI_D_INFO, "dir_count_entries, path: %a\n", path));
 	while (de) {
 	DEBUG ((EFI_D_INFO, "Looping in dir_count_entries\n"));
 		if(de->inode_type==EXT4_DE_REG_FILE){

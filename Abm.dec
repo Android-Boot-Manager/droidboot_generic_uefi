@@ -94,6 +94,19 @@
 
   gEfiQcomSecRSAProtocolGuid =         { 0xeb7a442a, 0xcef4, 0x40a7, {0xa8, 0xae, 0x5a, 0x2e, 0x7f, 0x48, 0xe1, 0x72 } }
   
+[PcdsFixedAtBuild.common]
+  # LinuxLoaderCommon
+  gQcomTokenSpaceGuid.KernelLoadAddress|0x00080000|UINT32|0x00015000
+  gQcomTokenSpaceGuid.TagsAddress|0x03200000|UINT32|0x00015001
+  gQcomTokenSpaceGuid.RamdiskLoadAddress|0x03400000|UINT32|0x00015002
+  gQcomTokenSpaceGuid.RamdiskEndAddress|0x05700000|UINT32|0x00015003
+  gQcomTokenSpaceGuid.EnablePartialGoods|TRUE|BOOLEAN|0x00015004
+  gQcomTokenSpaceGuid.EnableDisplayMenu|TRUE|BOOLEAN|0x00015005
+  gQcomTokenSpaceGuid.KernelLoadAddress32|0x00008000|UINT32|0x00015006
+  gQcomTokenSpaceGuid.EnableMdtpSupport|FALSE|BOOLEAN|0x00015007
+  gQcomTokenSpaceGuid.AllowEio|FALSE|BOOLEAN|0x00015008
+  gQcomTokenSpaceGuid.EnableBatteryVoltageCheck|TRUE|BOOLEAN|0x00015009
+  
 #[Includes]
 #  StdLib/Include
 [Includes.common]

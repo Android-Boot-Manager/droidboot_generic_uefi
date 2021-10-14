@@ -60,6 +60,18 @@
   gQcomTokenSpaceGuid
   gBlockIoRefreshGuid
   
+[FixedPcd]
+	gArmTokenSpaceGuid.PcdSystemMemoryBase
+	gArmTokenSpaceGuid.PcdSystemMemorySize
+	gQcomTokenSpaceGuid.KernelLoadAddress
+	gQcomTokenSpaceGuid.TagsAddress
+	gQcomTokenSpaceGuid.RamdiskLoadAddress
+	gQcomTokenSpaceGuid.RamdiskEndAddress
+	gQcomTokenSpaceGuid.EnablePartialGoods
+	gQcomTokenSpaceGuid.EnableDisplayMenu
+	gQcomTokenSpaceGuid.KernelLoadAddress32
+	gQcomTokenSpaceGuid.EnableMdtpSupport
+	
 [Sources.common]
   abm_base.h
   abm_base.c

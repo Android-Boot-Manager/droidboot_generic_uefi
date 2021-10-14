@@ -27,20 +27,151 @@ bool abm_running=true;
 #include <ext4_mkfs.h>
 #include "config.h"
 
+void * buf_k1;
+void * buf_rd;
+int rd_size;
+int k_size;
+int num_of_boot_entries;
 struct boot_entry *entry_list;
 
-static struct ext4_mkfs_info info = {
-	.block_size = 4096,
-	.journal = false,
+struct boot_entry_now {
+    bool boot;
+    int sleep_time;
+    char *title;
+    bool internal;
+	char *linux_kernel;
+    char *initrd;
+    char *dtb;
+    char *cmdline;
+    char *logopath;
 };
-static int fs_type = F_SET_EXT2;
-static struct ext4_fs fs;
+struct DualbootInfo {
+  BOOLEAN CustomSlot;
+  VOID *linux_kernel;
+  UINT32 linux_size;
+};
+struct boot_entry_now boot_now;
+struct DualbootInfo *db;
+UINT64 BaseMemory;
 static struct ext4_blockdev *bd;
+
+void DumpHex(const void* data, size_t size) {
+	char ascii[17];
+	size_t i, j;
+	ascii[16] = '\0';
+	for (i = 0; i < size; ++i) {
+	    if(((unsigned char*)data)[i] !=0)
+		    DEBUG ((EFI_D_INFO,"%02X ", ((unsigned char*)data)[i]));
+		if (((unsigned char*)data)[i] >= ' ' && ((unsigned char*)data)[i] <= '~') {
+			ascii[i % 16] = ((unsigned char*)data)[i];
+		} else {
+			ascii[i % 16] = '.';
+		}
+		if ((i+1) % 8 == 0 || i+1 == size) {
+			DEBUG ((EFI_D_INFO," "));
+			if ((i+1) % 16 == 0) {
+				DEBUG ((EFI_D_INFO,"|  %s \n", ascii));
+			} else if (i+1 == size) {
+				ascii[(i+1) % 16] = '\0';
+				if ((i+1) % 16 <= 8) {
+					DEBUG ((EFI_D_INFO," "));
+				}
+				for (j = (i+1) % 16; j < 16; ++j) {
+					DEBUG ((EFI_D_INFO,"   "));
+				}
+				DEBUG ((EFI_D_INFO,"|  %s \n", ascii));
+			}
+		}
+	}
+}
+
+void *load_file_to_memory(const char *filename) 
+{ 
+    unsigned char *buf;
+	int size = 0;
+	size_t rb;
+	ext4_file f;
+	ext4_fopen(&f, filename, "r");
+	ext4_fseek(&f, 0, SEEK_END);
+	size = ext4_ftell(&f);
+	buf = malloc(size + 1);
+	ext4_fseek(&f, 0, SEEK_SET);
+	ext4_fread(&f, buf, size, &rb);
+	ext4_fclose(&f);
+	buf[size] = 0;
+	return buf;
+}
 
 static void event_handler(lv_obj_t * obj, lv_event_t event)
 {
     if(event == LV_EVENT_CLICKED) {
-        abm_running=false;
+        int index = lv_list_get_btn_index(NULL, obj);     
+        if(index==0){
+            abm_running=false;
+            boot_now.title=malloc(strlen(entry_list->title));
+            strcpy(boot_now.title, entry_list->title);
+            boot_now.title = entry_list->title;
+            db->CustomSlot=false;
+            boot_now.internal=true;
+            //draw_booting();
+        //boot_linux_from_storage();
+        return;
+        }
+        if(index==num_of_boot_entries)
+        {
+            abm_running=false;
+            //db->CustomSlot=false;
+            buf_k1=NULL;
+            k_size=0;
+            buf_rd=NULL;
+            rd_size=0;
+        }
+      
+        else
+        {
+            char *linux_kernel = malloc(strlen("/meta/") + strlen((entry_list + index)->linux_kernel) + 1);
+		    char *initrd = malloc(strlen("/meta/") + strlen((entry_list + index)->initrd) + 1);
+            char *dtb = malloc(strlen("/meta/") + strlen((entry_list + index)->dtb) + 1);
+            strcpy(linux_kernel, "/meta/");
+		    strcat(linux_kernel, (entry_list + index)->linux_kernel);
+		    strcpy(initrd, "/meta/");
+		    strcat(initrd, (entry_list + index)->initrd);
+            strcpy(dtb, "/meta/");
+		    strcat(dtb, (entry_list + index)->dtb);
+            boot_now.boot=true;
+            boot_now.title=malloc(strlen((entry_list+index)->title));
+            boot_now.title = (entry_list+index)->title;
+            boot_now.linux_kernel=malloc(strlen(linux_kernel));
+            boot_now.linux_kernel = linux_kernel;
+            boot_now.initrd=malloc(strlen(initrd));
+            boot_now.initrd = initrd;
+            boot_now.dtb=malloc(strlen(dtb));
+            boot_now.dtb = dtb;
+            boot_now.cmdline=malloc(strlen((entry_list + index)->options));
+            boot_now.cmdline = (entry_list + index)->options;
+            boot_now.internal=false;
+            DEBUG ((EFI_D_INFO,"Loading kernel: %a\n",	boot_now.linux_kernel));
+            int size= 0;
+	        size_t rb;
+	        ext4_file f;
+	        ext4_fopen(&f, boot_now.linux_kernel, "r");
+	        ext4_fseek(&f, 0, SEEK_END);
+	        size = ext4_ftell(&f);
+	        ext4_fclose(&f);
+            buf_k1 = malloc(size);
+            buf_k1=load_file_to_memory(boot_now.linux_kernel);
+            k_size=size;
+            
+	        ext4_fopen(&f, boot_now.initrd, "r");
+	        ext4_fseek(&f, 0, SEEK_END);
+	        size = ext4_ftell(&f);
+	        ext4_fclose(&f);
+            buf_rd = malloc(size);
+            buf_rd=load_file_to_memory(boot_now.initrd);
+            rd_size=size;      
+           
+            abm_running=false;
+        }
     }
 }
 static void EfiGopBltFlush(
@@ -87,15 +218,14 @@ bool key_read(lv_indev_drv_t * drv, lv_indev_data_t*data)
 //
 // main entry point
 //
-EFI_STATUS
-EFIAPI
-test_lvgl (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable, EFI_BLOCK_IO_PROTOCOL *BlockIo)
+struct DualbootInfo
+*test_lvgl (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable, EFI_BLOCK_IO_PROTOCOL *BlockIo, UINT64 base_mem)
 {
   gST1 = SystemTable; 
   gBS1 = gST1->BootServices; 
   gBS1->LocateProtocol(
       &gEfiGraphicsOutputProtocolGuid, NULL, (VOID **)&mGop);
-
+  BaseMemory=base_mem;
   // Setup lwext4 lib, based on UEFI BlockIo protocol
   uefi_dev_set(BlockIo);
   bd = uefi_dev_get();
@@ -137,8 +267,10 @@ test_lvgl (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable, EFI_BLOCK_IO_P
 
   lv_obj_t * list_btn;
   lv_obj_set_state(list1, LV_STATE_DEFAULT);
+  num_of_boot_entries=get_entry_count();
   for(int i=0; i<get_entry_count(); i++){
         list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, (entry_list+i)->title);
+        lv_obj_set_event_cb(list_btn, event_handler);
   }
   list_btn = lv_list_add_btn(list1,  LV_SYMBOL_FILE, "Extras");
   lv_obj_set_event_cb(list_btn, event_handler);
@@ -149,4 +281,23 @@ test_lvgl (EFI_HANDLE ImageHandle, EFI_SYSTEM_TABLE *SystemTable, EFI_BLOCK_IO_P
     lv_task_handler();
     gBS1->Stall(EFI_TIMER_PERIOD_MILLISECONDS(1));
   }
+  return db;
 } 
+
+void
+*get_dualboot_kernel(){
+return buf_k1;
+}
+
+int get_dualboot_kernel_size(){
+return k_size;
+}
+
+void
+*get_dualboot_initrd(){
+return buf_rd;
+}
+
+int get_dualboot_initrd_size(){
+return rd_size;
+}
