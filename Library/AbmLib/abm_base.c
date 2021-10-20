@@ -29,6 +29,8 @@ bool abm_running=true;
 
 void * buf_k1;
 void * buf_rd;
+char *cmdline;
+int cmdline_size;
 int rd_size;
 int k_size;
 int num_of_boot_entries;
@@ -106,16 +108,13 @@ static void event_handler(lv_obj_t * obj, lv_event_t event)
 {
     if(event == LV_EVENT_CLICKED) {
         int index = lv_list_get_btn_index(NULL, obj);     
-        if(index==0){
+        if(index==1){
             abm_running=false;
-            boot_now.title=malloc(strlen(entry_list->title));
-            strcpy(boot_now.title, entry_list->title);
-            boot_now.title = entry_list->title;
-            db->CustomSlot=false;
-            boot_now.internal=true;
-            //draw_booting();
-        //boot_linux_from_storage();
-        return;
+            //db->CustomSlot=false;
+            buf_k1=NULL;
+            k_size=0;
+            buf_rd=NULL;
+            rd_size=0;
         }
         if(index==num_of_boot_entries)
         {
@@ -169,7 +168,8 @@ static void event_handler(lv_obj_t * obj, lv_event_t event)
             buf_rd = malloc(size);
             buf_rd=load_file_to_memory(boot_now.initrd);
             rd_size=size;      
-           
+            cmdline=boot_now.cmdline;
+            cmdline_size=strlen((entry_list + index)->options);
             abm_running=false;
         }
     }
@@ -300,4 +300,13 @@ return buf_rd;
 
 int get_dualboot_initrd_size(){
 return rd_size;
+}
+
+void
+*get_dualboot_cmdline(){
+return cmdline;
+}
+
+int get_dualboot_cmdline_size(){
+return cmdline_size;
 }

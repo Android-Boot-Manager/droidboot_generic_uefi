@@ -10,11 +10,6 @@
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiRuntimeServicesTableLib.h>
 
-
-
-
-
-
 typedef VOID (*LINUX_KERNEL) (UINT64 ParametersBase,
                               UINT64 Reserved0,
                               UINT64 Reserved1,
@@ -37,3 +32,8 @@ void
 *get_dualboot_initrd();
 
 int get_dualboot_initrd_size();
+
+void
+*get_dualboot_cmdline();
+
+int get_dualboot_cmdline_size();
