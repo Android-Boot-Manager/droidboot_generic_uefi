@@ -13,7 +13,7 @@
 #define WT size_t
 #define WS (sizeof(WT))
 
-#define ARRAY_SIZE(a)                               \
+#define ARRAY_SIZE1(a)                               \
   ((sizeof(a) / sizeof(*(a))) /                     \
   (size_t)(!(sizeof(a) % sizeof(*(a)))))
   
@@ -53,7 +53,7 @@ int vprintf(const char *format, va_list ap)
 {
   CHAR8 buf[100];
 
-  vsnprintf(buf, ARRAY_SIZE(buf), format, ap);
+  vsnprintf(buf, ARRAY_SIZE1(buf), format, ap);
   DEBUG((DEBUG_ERROR, "%a", buf));
   return 0;
 }

@@ -27,8 +27,6 @@
 [Packages]
   MdePkg/MdePkg.dec
   MdeModulePkg/MdeModulePkg.dec
-  IntelFrameworkPkg/IntelFrameworkPkg.dec
-  IntelFrameworkModulePkg/IntelFrameworkModulePkg.dec
 # Uncomment the below when compiling with OS X
 #  StdLib/StdLib.dec
 
@@ -51,7 +49,6 @@
   IoLib
   PerformanceLib
   LVGLLib
-  lwext4Lib
 
 [LibraryClasses.AARCH64]
   BaseStackCheckLib
@@ -87,7 +84,6 @@
   gEfiUnicodeCollationProtocolGuid                       # ALWAYS_CONSUMED  
   gEfiUnicodeCollation2ProtocolGuid                       # ALWAYS_CONSUMED  
   
-  gEfiAcpiS3SaveProtocolGuid                    # PROTOCOL CONSUMES
   gEfiBlockIoProtocolGuid                       # PROTOCOL CONSUMES
   gEfiCpuArchProtocolGuid                       # PROTOCOL CONSUMES
   gEfiDebugPortProtocolGuid                     # PROTOCOL CONSUMES
@@ -97,9 +93,7 @@
   gEfiFirmwareVolume2ProtocolGuid               # PROTOCOL CONSUMES
   gEfiGraphicsOutputProtocolGuid                # PROTOCOL SOMETIMES_CONSUMES
   gEfiHiiFontProtocolGuid                       # PROTOCOL CONSUMES
-  gEfiLegacy8259ProtocolGuid					## PROTOCOL SOMETIMES_CONSUMES
   gEfiLoadedImageProtocolGuid                   # PROTOCOL CONSUMES
-  gEfiOEMBadgingProtocolGuid                    # PROTOCOL CONSUMES
   gEfiPciIoProtocolGuid                         # PROTOCOL CONSUMES 
   gEfiScsiIoProtocolGuid                        ## PROTOCOL SOMETIMES_CONSUMES
   gEfiScsiPassThruProtocolGuid                  ## PROTOCOL SOMETIMES_CONSUMES
@@ -112,15 +106,12 @@
   gEfiEdidDiscoveredProtocolGuid
   gEfiHiiDatabaseProtocolGuid
   gEfiHiiImageProtocolGuid
-  gEfiHiiProtocolGuid
   gEfiSimplePointerProtocolGuid
   gEfiSmbiosProtocolGuid
   gEfiSecurityArchProtocolGuid  
   gEfiScsiIoProtocolGuid                        ## PROTOCOL SOMETIMES_CONSUMES
   gEfiScsiPassThruProtocolGuid                  ## PROTOCOL SOMETIMES_CONSUMES
   gEfiExtScsiPassThruProtocolGuid               ## PROTOCOL SOMETIMES_CONSUMES
-
-  gEfiLegacyBiosProtocolGuid                    # PROTOCOL TO_START
 
   gEfiLoadFile2ProtocolGuid
   gEfiLoadFileProtocolGuid
