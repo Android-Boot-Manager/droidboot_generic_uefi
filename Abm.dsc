@@ -88,3 +88,4 @@
 
 [Components]
   AbmPkg/abm.inf
+  AbmPkg/filesystems/ext4.inf
